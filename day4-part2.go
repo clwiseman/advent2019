@@ -9,6 +9,28 @@ import (
 var minValue = 137683
 var maxValue = 596253
 
+func indexOf(element string, data []string) int {
+	for i, v := range data {
+		if element == v {
+			return i
+		}
+	}
+	return -1 //not found.
+}
+
+func lastIndexOf(element string, data []string) int {
+	indices := make([]int, len(data))
+	for i, v := range data {
+		if element == v {
+			indices = append(indices, i)
+		}
+	}
+	if len(indices) > 0 {
+		return indices[len(indices)-1]
+	}
+	return -1 //not found.
+}
+
 func hasDoubleButNotMore(num int) bool {
 	// convert to string
 	str := strconv.Itoa(num)
@@ -16,24 +38,25 @@ func hasDoubleButNotMore(num int) bool {
 	array := make([]string, len(str))
 	array = strings.Split(str, "")
 
-	// check if three digits in a row, fail
-	for i := range array {
-		if i == len(array)-2 {
-			break
-		}
-		if array[i] == array[i+1] && array[i] == array[i+2] {
-			return false
-		}
-	}
+	// empty array to hold duplicates
+	duplicates := make([]string, len(str))
 
-	// if not three in a row are there two in row, pass
-	for i := range array {
+	// check if same digit in array, push to empty array
+	for i, v := range array {
 		if i == len(array)-1 {
 			break
 		}
+		//append doubles to duplicates array
 		if array[i] == array[i+1] {
-			return true
+			duplicates = append(duplicates, v)
 		}
+	}
+	//count if single digit in array
+	for _, v := range duplicates {
+		if indexOf(v, duplicates) != lastIndexOf(v, duplicates) {
+			continue
+		}
+		return true
 	}
 
 	return false
